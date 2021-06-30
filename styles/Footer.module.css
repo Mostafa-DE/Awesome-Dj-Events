@@ -1,0 +1,13 @@
+.footer {
+  margin: 100px 0 40px;
+  text-align: center;
+}
+
+.footer p {
+  margin: 5px 0;
+}
+
+.footer a {
+  color: red;
+  font-size: 1.1rem;
+}
