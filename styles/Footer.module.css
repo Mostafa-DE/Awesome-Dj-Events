@@ -9,5 +9,22 @@
 
 .footer a {
   color: red;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  color: rgba(255, 0, 0, 0.658);
+}
+
+.footer p span a {
+  color: #03c7ff;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.footer p span a:hover {
+  color: #03c8ffa6;
 }
