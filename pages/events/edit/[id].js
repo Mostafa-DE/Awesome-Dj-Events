@@ -6,21 +6,30 @@ import Link from "next/dist/client/link";
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from '@/styles/Add.module.css';
-// import { object } from "prop-types";
+import moment from 'moment';
+import Image from 'next/image';
+import { FaImage } from 'react-icons/fa';
+import Model from '@/components/Model';
+import ImageUpload from '@/components/ImageUpload';
 
-export default function add() {
+export default function EditEventPage({evnt}) {
     const [values, setValues] = useState({
-        name: "",
-        performers: "",
-        venue: "",
-        address: "",
-        date: "",
-        time: "",
-        description: ""
-    })
+        name: evnt.name,
+        performers: evnt.performers,
+        venue: evnt.venue,
+        address: evnt.address,
+        date: evnt.date,
+        time: evnt.time,
+        description: evnt.description
+    });
+    const [imagePreview, setImagePreview] = 
+        useState(evnt.image ? evnt.image.formats.thumbnail.url : null
+    );
+    const [showModel, setShowModel] = useState(false);
+
     const router = useRouter();
-    const handleSubmit = async (evnt) => {
-        evnt.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         
         /* ------------------ validation Fields ----------------------- */
         const hasEmptyFields = Object.values(values).some(
@@ -30,15 +39,15 @@ export default function add() {
         }
         /* ---------------------------X---------------------------------*/
         
-        const res = await fetch(`${API_URL}/events`, {
-            method: 'POST',
+        const res = await fetch(`${API_URL}/events/${evnt.id}`, {
+            method: 'PUT',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         });
-
+        // const evnt = await res.json();
+        // console.log(evnt.id);
         if(!res.ok) {
             toast.error("OOPS, SOMTHING WENT WRONG!!");
         } else {
@@ -53,10 +62,17 @@ export default function add() {
         setValues({...values, [name]: value});
     }
 
+    const imageUploaded = async (e) => {
+        const res = await fetch(`${API_URL}/events/${evnt.id}`);
+        const data = await res.json();
+        setImagePreview(data.image.formats.thumbnail.url);
+        setShowModel(false);
+    }
+
     return (
-        <Layout title="Add New Event">
+        <Layout title="Edit Event">
             <Link href="/"><a className="btn">Home Page</a></Link>
-            <h1>Add New Events!!</h1>
+            <h1>Edit Events!!</h1>
             <ToastContainer position="top-left" closeOnClick draggable pauseOnHover />
             <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.grid}>
@@ -106,7 +122,7 @@ export default function add() {
                             type="date"
                             id="date"
                             name="date"
-                            value={values.date}
+                            value={moment(values.date).format('yyyy-MM-DD')}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -134,9 +150,35 @@ export default function add() {
                     >
                     </textarea>
                 </div>
-                <input type="submit" value="Add Event" className={styles.btn}></input>
-
+                <input type="submit" value="Edit Event" className={styles.btn} />
             </form>
+            <h2>Event Image:</h2>
+            {imagePreview ? (<Image src={imagePreview} height={100} width={170} />) : 
+                <div>
+                    <p>No image uploaded</p>
+                </div>
+            }
+            <div>
+                <button className="btn" onClick={() => setShowModel(true)}>
+                    <FaImage /> Set Image
+                </button>
+            </div>
+
+            <Model show={showModel} onClose={() => setShowModel(false)}>
+                <ImageUpload evntId={evnt.id} imageUploaded={imageUploaded} />
+            </Model>
         </Layout>
     )
+}
+
+
+
+export async function getServerSideProps({params: {id}}) {
+    const res = await fetch(`${API_URL}/events/${id}`);
+    const evnt = await res.json();
+    return {
+        props: {
+            evnt
+        }
+    }
 }
