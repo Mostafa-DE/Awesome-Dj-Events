@@ -14,6 +14,13 @@ export default function loginPage() {
     
     const { login, error } = useContext(AuthContext);
 
+    useEffect(() => {
+        // error && toast.error(error);
+       if(error) {
+        return toast.error("Email or password incorrect");
+       }
+    })
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log({email, password});
@@ -27,7 +34,7 @@ export default function loginPage() {
         <Layout title="User Login">
             <div className={styles.auth}>
                 <h1><FaUser /> Log In</h1>
-                <ToastContainer />
+                <ToastContainer position="top-center" style={{marginTop: "2rem"}} />
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email Address:</label>
                 <input 

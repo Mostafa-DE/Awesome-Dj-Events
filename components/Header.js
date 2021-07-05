@@ -33,14 +33,14 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/events/dashboard">
+                                <Link href="/account/dashboard">
                                     <a>Dashboard</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/account/login/">
-                                    <a className="btn-login-logout" > <FaSignOutAlt /> Logout</a>
-                                </Link>
+                                <button className={styles.btn} onClick={logout}>
+                                     <FaSignOutAlt /> Logout
+                                </button>
                             </li>
                         </>
                         ) :

@@ -26,6 +26,17 @@
   list-style: none;
 }
 
+.btn {
+  border: 1px solid black;
+  padding: 0.5rem 0.8rem;
+  color: black;
+  background-color: black;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
 .logo {
   color: #03c7ff;
   font-size: 24px;
